@@ -1,12 +1,12 @@
 // Input Logic
 const int BUTTON1 = 7;
 const int BUTTON2 = 8;
-const int BUTTON3 = 1;
+const int BUTTON3 = 10;
 const int BUTTON4 = 13;
-const int BUTTON5 = 2;
+const int BUTTON5 = 11;
 const int BUTTON6 = 12;
-const int BUTTON_PINS[6] = {7, 8, 1, 13, 2, 12};
-const int RESET_PIN = 10;
+const int BUTTON_PINS[6] = {7, 8, 10, 13, 11, 12};
+const int RESET_PIN = A1;
 
 //Output Logic
 const int RED = 2;
@@ -15,6 +15,8 @@ const int YELLOW = 6;
 const int GREEN = 9;
 const int COLOR_PINS[4] = {2, 3, 6, 9};
 const int PIEZO = 4;
+  bool button5_state = LOW;
+const int NOTES[4] = {262, 294, 330, 349};
 const int RED_CHANNEL = A3;
 const int GREEN_CHANNEL = A6;
 const int BLUE_CHANNEL = A7;
@@ -38,6 +40,7 @@ void setup() {
   // TODO: Setup RTC and ICM
   // TODO: Setup Serial for debugging and testing
   Serial.begin(115200);
+
 }
 
 void loop() {
@@ -49,4 +52,13 @@ void loop() {
       Serial.print(BUTTON_PINS[index]);
     }
   }
+  if (digitalRead(BUTTON5) == HIGH && button5_state == LOW){
+    tone(PIEZO, NOTES[0], 250);
+    Serial.println("Button pressed!!: ");
+    Serial.print(BUTTON5);
+  }
+  else if (digitalRead(BUTTON5) == LOW && button5_state == HIGH){
+    noTone(PIEZO);
+  }
+  button5_state = digitalRead(BUTTON5);
 }
