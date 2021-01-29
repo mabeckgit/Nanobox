@@ -13,14 +13,25 @@ const int RED = 2;
 const int BLUE = 3;
 const int YELLOW = 6;
 const int GREEN = 9;
-const int COLOR_PINS[4] = {2, 3, 6, 9};
+const int WHITE = 5;
+const int COLOR_PINS[5] = {2, 3, 6, 9, 5};
 const int PIEZO = 4;
-  bool button5_state = LOW;
+bool button6_state = LOW;
 const int NOTES[4] = {262, 294, 330, 349};
 const int RED_CHANNEL = A3;
 const int GREEN_CHANNEL = A6;
 const int BLUE_CHANNEL = A7;
 const int CHANNELS[3] = {A3, A6, A7};
+
+//RGB Values
+struct RGB_Code {
+  int r, g, b;
+};
+//Start with Yellow
+struct RGB_Code rgb = {255, 255, 0};
+int zero_value = 2;
+
+// TODO: Mapping between color-words and RGB_Codes
 
 void setup() {
   // Input logic
@@ -40,25 +51,50 @@ void setup() {
   // TODO: Setup RTC and ICM
   // TODO: Setup Serial for debugging and testing
   Serial.begin(115200);
+  // TODO: Write functions for rising and falling edges
+  // TODO: Implement reset-button to reset Arduino
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  for(int index = 0; index < 4; index++){
+  for(int index = 0; index < 5; index++){
     digitalWrite(COLOR_PINS[index], digitalRead(BUTTON_PINS[index]));
-    if (digitalRead(BUTTON_PINS[index]) == HIGH){
-      Serial.println("Button pressed: ");
-      Serial.print(BUTTON_PINS[index]);
-    }
   }
-  if (digitalRead(BUTTON5) == HIGH && button5_state == LOW){
+  //Rising Edge
+  if (digitalRead(BUTTON6) == HIGH && button6_state == LOW){
     tone(PIEZO, NOTES[0], 250);
-    Serial.println("Button pressed!!: ");
-    Serial.print(BUTTON5);
+    cycleRGB();
+    updateRGB(rgb);
   }
-  else if (digitalRead(BUTTON5) == LOW && button5_state == HIGH){
+  //Falling Edge
+  else if (digitalRead(BUTTON6) == LOW && button6_state == HIGH){
     noTone(PIEZO);
   }
-  button5_state = digitalRead(BUTTON5);
+  button6_state = digitalRead(BUTTON6);
+
+  
+}
+
+RGB_Code cycleRGB() {
+  zero_value = (zero_value + 1) % 3;
+  rgb = {255, 255, 255};
+  // Cyan
+  if (zero_value == 0){
+    rgb.r = 0;
+  }
+  // Purple
+  if (zero_value == 1){
+    rgb.g = 0;
+  }
+  // Yellow
+  if (zero_value == 2){
+    rgb.b = 0;
+  }
+}
+
+void updateRGB(RGB_Code rgb){
+  analogWrite(A3, map(rgb.r, 0, 255, 0, 1023));
+  analogWrite(A6, map(rgb.g, 0, 255, 0, 1023));
+  analogWrite(A7, map(rgb.b, 0, 255, 0, 1023));
 }
