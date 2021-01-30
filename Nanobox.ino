@@ -1,3 +1,5 @@
+#include <Arduino_LSM6DS3.h>
+
 // Input Logic
 const int BUTTON1 = 7;
 const int BUTTON2 = 8;
@@ -48,16 +50,55 @@ void setup() {
     pinMode(CHANNELS[index], OUTPUT);
   }
   pinMode(PIEZO, OUTPUT);
-  // TODO: Setup RTC and ICM
+  
   // TODO: Setup Serial for debugging and testing
   Serial.begin(115200);
+  while(!Serial);
+  
+  // Setup IMU
+  if (!IMU.begin()){
+    Serial.println("Failed to initialize IMU!");
+    while(1);
+  }
+  Serial.print("Accelerometer sample rate = ");
+  Serial.print(IMU.accelerationSampleRate());
+  Serial.println(" Hz");
+  Serial.print("Gyroscope sample rate = ");
+  Serial.print(IMU.gyroscopeSampleRate());
+  Serial.println(" Hz"); 
+  Serial.println();
   // TODO: Write functions for rising and falling edges
   // TODO: Implement reset-button to reset Arduino
-
+  // TODO: Setup RTC and ICM
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  //Accelerometer variables
+  float accel[3];
+  if(IMU.accelerationAvailable()) {
+    IMU.readAcceleration(accel[0], accel[1], accel[2]);
+    Serial.println("Acc values: ");
+    Serial.print(accel[0]);
+    Serial.print('\t');
+    Serial.print(accel[1]);
+    Serial.print('\t');
+    Serial.println(accel[2]);
+    for(int index = 0; index < 3; index++){
+      analogWrite(COLOR_PINS[index], map(constrain(round(100*accel[index]), 0, 100), 0, 100, 0, 1023));
+    }
+  }
+
+  float a, b, c;
+  if (IMU.gyroscopeAvailable()) {
+    /*IMU.readGyroscope(a, b, c);
+    Serial.println("Gyrovalues: ");
+    Serial.print(a);
+    Serial.print('\t');
+    Serial.print(b);
+    Serial.print('\t');
+    Serial.println(c);*/
+  }
+
   for(int index = 0; index < 5; index++){
     digitalWrite(COLOR_PINS[index], digitalRead(BUTTON_PINS[index]));
   }
@@ -72,8 +113,7 @@ void loop() {
     noTone(PIEZO);
   }
   button6_state = digitalRead(BUTTON6);
-
-  
+  delay(500);
 }
 
 RGB_Code cycleRGB() {
