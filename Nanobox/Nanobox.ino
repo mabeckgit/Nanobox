@@ -20,10 +20,10 @@ const int COLOR_PINS[5] = {2, 3, 6, 9, 5};
 const int PIEZO = 4;
 bool button6_state = LOW;
 const int NOTES[4] = {262, 294, 330, 349};
-const int RED_CHANNEL = A3;
-const int GREEN_CHANNEL = A6;
-const int BLUE_CHANNEL = A7;
-const int CHANNELS[3] = {A3, A6, A7};
+const int RED_CHANNEL = A5;
+const int GREEN_CHANNEL = A3;
+const int BLUE_CHANNEL = A2;
+const int CHANNELS[3] = {A5, A3, A2};
 
 //RGB Values
 struct RGB_Code {
@@ -43,19 +43,20 @@ void setup() {
   pinMode(RESET_PIN, INPUT);
 
   // Output Logic
-  for(int index = 0; index < 4; index++){
+  for(int index = 0; index < 5; index++){
     pinMode(COLOR_PINS[index], OUTPUT);
   }
   for(int index = 0; index < 3; index++){
     pinMode(CHANNELS[index], OUTPUT);
   }
   pinMode(PIEZO, OUTPUT);
-  
+  pinMode(A4, OUTPUT);
+  digitalWrite(A4, HIGH);
   // TODO: Setup Serial for debugging and testing
   Serial.begin(115200);
   while(!Serial);
   
-  // Setup IMU
+  /* Setup IMU
   if (!IMU.begin()){
     Serial.println("Failed to initialize IMU!");
     while(1);
@@ -69,11 +70,11 @@ void setup() {
   Serial.println();
   // TODO: Write functions for rising and falling edges
   // TODO: Implement reset-button to reset Arduino
-  // TODO: Setup RTC and ICM
+  // TODO: Setup RTC and ICM */
 }
 
 void loop() {
-  //Accelerometer variables
+  /*Accelerometer variables
   float accel[3];
   if(IMU.accelerationAvailable()) {
     IMU.readAcceleration(accel[0], accel[1], accel[2]);
@@ -86,9 +87,9 @@ void loop() {
     for(int index = 0; index < 3; index++){
       analogWrite(COLOR_PINS[index], map(constrain(round(100*accel[index]), 0, 100), 0, 100, 0, 1023));
     }
-  }
+  }*/
 
-  float a, b, c;
+  /*float a, b, c;
   if (IMU.gyroscopeAvailable()) {
     /*IMU.readGyroscope(a, b, c);
     Serial.println("Gyrovalues: ");
@@ -96,8 +97,8 @@ void loop() {
     Serial.print('\t');
     Serial.print(b);
     Serial.print('\t');
-    Serial.println(c);*/
-  }
+    Serial.println(c);
+  }*/
 
   for(int index = 0; index < 5; index++){
     digitalWrite(COLOR_PINS[index], digitalRead(BUTTON_PINS[index]));
@@ -134,7 +135,7 @@ RGB_Code cycleRGB() {
 }
 
 void updateRGB(RGB_Code rgb){
-  analogWrite(A3, map(rgb.r, 0, 255, 0, 1023));
-  analogWrite(A6, map(rgb.g, 0, 255, 0, 1023));
-  analogWrite(A7, map(rgb.b, 0, 255, 0, 1023));
+  analogWrite(RED_CHANNEL, map(rgb.r, 0, 255, 0, 1023));
+  analogWrite(GREEN_CHANNEL, map(rgb.g, 0, 255, 0, 1023));
+  analogWrite(BLUE_CHANNEL, map(rgb.b, 0, 255, 0, 1023));
 }
