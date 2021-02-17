@@ -1,0 +1,31 @@
+# MUST USE TABS BETWEEN keyword and type!
+
+###################################
+# Datatypes (KEYWORD1)
+###################################
+RGB_Code	KEYWORD1
+
+###################################
+# Methods and Funtions (KEYWORD2)
+###################################
+blinkLED	KEYWORD2
+
+#######################
+# Constants (LITERAL)
+#######################
+RED	LITERAL1
+BLUE	LITERAL1
+YELLOW	LITERAL1
+GREEN	LITERAL1
+WHITE	LITERAL1
+RED_CHANNEL	LITERAL1
+GREEN_CHANNEL	LITERAL1
+BLUE_CHANNEL	LITERAL1
+RGB_RED	LITERAL1
+RGB_GREEN	LITERAL1
+RGB_BLUE	LITERAL1
+RGB_YELLOW	LITERAL1
+RGB_MAGENTA	LITERAL1
+RGB_CYAN	LITERAL1
+RGB_WHITE	LITERAL1
+RGB_BLACK	LITERAL1
