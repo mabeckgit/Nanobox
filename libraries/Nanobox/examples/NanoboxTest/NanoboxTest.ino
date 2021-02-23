@@ -5,10 +5,10 @@
 #include "Nanobox.h"
 
 void setup() {
-  pinMode(RED, OUTPUT);
+  pinMode(Nanobox.RED, OUTPUT);
 }
 
 void loop() {
-  blinkLED(RED, 1000);
+  Nanobox.blinkLED(Nanobox.RED, 1000);
   delay(1000);
 }
