@@ -4,11 +4,16 @@
 #include <Arduino_LSM6DS3.h>
 #include "Nanobox.h"
 
+bool flip = false;
+
 void setup() {
-  pinMode(Nanobox.RED, OUTPUT);
 }
 
 void loop() {
-  Nanobox.blinkLED(Nanobox.RED, 1000);
-  delay(1000);
+  if(Nanobox.reactiveButton(Nanobox.BUTTON1, true)){
+    flip = !flip;
+  }
+  digitalWrite(Nanobox.RED, flip);
+  
+  digitalWrite(Nanobox.YELLOW, digitalRead(Nanobox.BUTTON1));
 }

@@ -12,16 +12,21 @@
 	 public:
 		// Constructor
 		NanoboxClass();
+		/*
+		 * Output Logic
+		 */
 		// constants mapping LED colors to pins
 		const int RED = 2; 
 		const int BLUE = 3;
 		const int YELLOW = 6;
 		const int GREEN = 9;
 		const int WHITE = 5;
+		const int COLOR_PINS[5] = {2, 3, 6, 9, 5};
 		// common-cathode LED channels
 		const int RED_CHANNEL = A0;
 		const int GREEN_CHANNEL = A3;
 		const int BLUE_CHANNEL = A2;
+		const int RGB_CHANNELS[3] = {A0, A3, A2};
 		 
 		 // constants defining 3-byte RGB-values
 		 struct RGB_Code {
@@ -41,7 +46,30 @@
 		 void blinkLED(int pin, int duration, int repeats);
 		 void blinkLED(int pin, int on_duration, int repeats, int off_duration);
 		 
-		 // TODO Rising and falling edges
+		 // ButtonLogic
+		 bool reactiveButton(int pin, bool rising);
+		 
+		 /*
+		  * Input Logic
+		  */
+		 // constants mapping buttons to pins
+		 const int BUTTON1 = 7;
+		const int BUTTON2 = 8;
+		const int BUTTON3 = 10;
+		const int BUTTON4 = 13;
+		const int BUTTON5 = 11;
+		const int BUTTON6 = 12;
+		const int BUTTON_PINS[6] = {7, 8, 10, 13, 11, 12};
+		const int RESET_PIN = A1;
+
+	private:
+		bool ButtonState1 = LOW;
+		bool ButtonState2 = LOW;
+		bool ButtonState3 = LOW;
+		bool ButtonState4 = LOW;
+		bool ButtonState5 = LOW;
+		bool ButtonState6 = LOW;
+		bool ButtonStates[6] = {LOW, LOW, LOW, LOW, LOW, LOW};
 };
 
 extern NanoboxClass Nanobox;	// The Nanobox object
