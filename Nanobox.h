@@ -46,14 +46,15 @@
 		 void blinkLED(int pin, int duration, int repeats);
 		 void blinkLED(int pin, int on_duration, int repeats, int off_duration);
 		 
-		 // ButtonLogic
-		 bool reactiveButton(int pin, bool rising);
+		 // Button logic
+		 bool reactiveButton(int pin, bool rising = true);
+		 long switchTime(int pin);
 		 
 		 /*
 		  * Input Logic
 		  */
 		 // constants mapping buttons to pins
-		 const int BUTTON1 = 7;
+		const int BUTTON1 = 7;
 		const int BUTTON2 = 8;
 		const int BUTTON3 = 10;
 		const int BUTTON4 = 13;
@@ -63,13 +64,11 @@
 		const int RESET_PIN = A1;
 
 	private:
-		bool ButtonState1 = LOW;
-		bool ButtonState2 = LOW;
-		bool ButtonState3 = LOW;
-		bool ButtonState4 = LOW;
-		bool ButtonState5 = LOW;
-		bool ButtonState6 = LOW;
-		bool ButtonStates[6] = {LOW, LOW, LOW, LOW, LOW, LOW};
+		// due to internal pull-ups the default state of all button inputs is high
+		bool buttonStates[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
+		// long variables giving the last time a button changed state
+		long pressTimes[6] = {0, 0, 0, 0, 0, 0};
+		int debounceTime = 15;
 };
 
 extern NanoboxClass Nanobox;	// The Nanobox object
