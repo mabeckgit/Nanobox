@@ -64,11 +64,16 @@
 		const int RESET_PIN = A1;
 
 	private:
-		// due to internal pull-ups the default state of all button inputs is high
+		// Used for reactiveButton function
+		bool reactiveStates[6] = {false, false, false, false, false, false};
+		
+		// due to internal pull-ups the default state of all button inputs is high. 
+		// Used for switchTime function
 		bool buttonStates[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
 		// long variables giving the last time a button changed state
 		long pressTimes[6] = {0, 0, 0, 0, 0, 0};
-		int debounceTime = 15;
+		long debounceTimePress = 20;
+		long debounceTimeRelease = 20;
 };
 
 extern NanoboxClass Nanobox;	// The Nanobox object

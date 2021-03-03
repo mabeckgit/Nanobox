@@ -48,40 +48,38 @@ void NanoboxClass::blinkLED(int pin, int on_duration, int repeats, int off_durat
 	}
 }
 // Setup detection of rising or falling edge in button. Uses internal pull-ups and debouncing
-// TODO: Find good debounce values!
 bool NanoboxClass::reactiveButton(int pin, bool rising){
+	// get index relating to button pin
 	const int* buttonPin;
 	buttonPin = std::find(BUTTON_PINS, BUTTON_PINS+6, pin);
+	int index = std::distance(BUTTON_PINS, buttonPin);
 	// return False if pin does not match any of Nanobox buttons
 	if(buttonPin == BUTTON_PINS+6){
 		return false;
 	}
 	else{
-		int index = std::distance(BUTTON_PINS, buttonPin);
-		bool &buttonState = buttonStates[index];
-		bool new_state = digitalRead(pin);
-		//detect falling edge/button-release (due to Pull-up we have to invert the signal)
-		// <-- flickers due to debounce
-		if(!rising && buttonState && new_state){
-			//debounce
-			if(switchTime(pin) < -debounceTime){
-				buttonState = new_state;
-				return true;
-			}
+		// get previous state
+		bool oldState = reactiveStates[index];
+		// get time button has been pressed or released
+		long time_pressed = switchTime(pin);
+		//set reactiveStates variable according to switch 
+		if(time_pressed < -debounceTimeRelease){
+			reactiveStates[index] = false;
 		}
-		//detect rising edge/button-press <-- ok value for debounce
-		else if(rising && buttonState&& !new_state){
-			//debounce 
-			if(switchTime(pin) > debounceTime){
-				buttonState = new_state;
-				return true;
-			}
+		else if(time_pressed > debounceTimePress){
+			reactiveStates[index] = true;
+		}
+		//detect falling edge/button-release (due to Pull-up we have to invert the signal)
+		if(!rising && oldState && !reactiveStates[index]){
+			return true;
+		}
+		//detect rising edge/button-press
+		else if(rising && !oldState && reactiveStates[index]){
+			return true;
 		}
 		else{
-			buttonState = new_state;
 			return false;
 		}
-
 	}
 }
 
