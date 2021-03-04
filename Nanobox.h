@@ -23,13 +23,13 @@
 		const int WHITE = 5;
 		const int COLOR_PINS[5] = {2, 3, 6, 9, 5};
 		// common-cathode LED channels
-		const int RED_CHANNEL = A0;
+		const int RED_CHANNEL = A5;
 		const int GREEN_CHANNEL = A3;
 		const int BLUE_CHANNEL = A2;
-		const int RGB_CHANNELS[3] = {A0, A3, A2};
+		const int RGB_CHANNELS[3] = {A5, A3, A2};
 		 
 		 // constants defining 3-byte RGB-values
-		 struct RGB_Code {
+		struct RGB_Code {
 			 int r, g, b;
 		 };
 		const struct RGB_Code RGB_RED = {255, 0, 0};
@@ -44,7 +44,11 @@
 		 // Overloaded blink functions
 		 void blinkLED(int pin, int duration);
 		 void blinkLED(int pin, int duration, int repeats);
-		 void blinkLED(int pin, int on_duration, int repeats, int off_duration);
+		 void blinkLED(int pin, int on_duration, 
+					   int repeats, int off_duration);
+					   
+		// RGB-LED
+		void updateRGB(RGB_Code rgb);
 		 
 		 // Button logic
 		 bool reactiveButton(int pin, bool rising = true);
@@ -67,13 +71,16 @@
 		// Used for reactiveButton function
 		bool reactiveStates[6] = {false, false, false, false, false, false};
 		
-		// due to internal pull-ups the default state of all button inputs is high. 
+		// due to internal pull-ups default state of all button inputs is high. 
 		// Used for switchTime function
 		bool buttonStates[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
 		// long variables giving the last time a button changed state
 		long pressTimes[6] = {0, 0, 0, 0, 0, 0};
 		long debounceTimePress = 20;
 		long debounceTimeRelease = 20;
+		
+		//for controlling overall brightness of common cathode LED
+		int max_brightness = 255;
 };
 
 extern NanoboxClass Nanobox;	// The Nanobox object

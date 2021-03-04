@@ -1,106 +1,63 @@
-#include <Arduino_LSM6DS3.h>
-
-/* Simple balancing game using the IMU and random numbers 
-The random number generator determines in which the orientation the nanobox must be brought
-LED's indicate the deviation from the orientation needed and the orientation the nanobox currently is in:
-Red: tilt to the right needed, Green: tilt to the left needed. Blue: Tilt to the top needed. Yellow: Tilt to 
-the bottom needed.
-The white LED responds to the points collected. More points equal a brighter LED. 
-The game ends and resets when the LED reaches maximal brightness.
-If the LED gets too dim the game is lost instead
-
+/* Simple memory game using random numbers 
+The random number generator determines which LED-button pair will be added to 
+the sequence. 
+The white LED serves as signal for the player to repeat the sequence seen
+The game ends and resets when a maximum length is correctly remembered, a 
+mistake was made or when the player does not respond within a given window.
+Button 5 is used to change difficulty (only when game is stopped)
+Button 6 is used to stop/start the game
 */
+#include <Arduino_LSM6DS3.h>
+#include "Nanobox.h"
 
-// Input Logic
-const int BUTTON1 = 7;
-const int BUTTON2 = 8;
-const int BUTTON3 = 10;
-const int BUTTON4 = 13;
-const int BUTTON5 = 11;
-const int BUTTON6 = 12;
-const int BUTTON_PINS[6] = {7, 8, 10, 13, 11, 12};
-const int RESET_PIN = A1;
+// game logic
+int difficulty = 0;  //0 = Easy, 1 = Normal, 2 = Hard, 3 = Master
+bool playing = false; 
 
-//Output Logic
-const int RED = 2;
-const int BLUE = 3;
-const int YELLOW = 6;
-const int GREEN = 9;
-const int WHITE = 5;
-const int COLOR_PINS[5] = {2, 3, 6, 9, 5};
-const int PIEZO = 4;
-bool button6_state = LOW;
-const int NOTES[4] = {262, 294, 330, 349};
-const int RED_CHANNEL = A0;
-const int GREEN_CHANNEL = A3;
-const int BLUE_CHANNEL = A2;
-const int CHANNELS[3] = {A0, A3, A2};
+int sequence_lengths[4] = {5, 7, 10, 15};  // length of sequences
+int interval_lengths[4] = {1000, 750, 500, 250};  // milliseconds
+int max_LEDs[4] = {1, 1, 2, 3};  // how many LEDs can trigger at once
 
-//RGB Values
-struct RGB_Code {
-  int r, g, b;
-};
-
-//Standard RGB Values
-struct RGB_Code red_rgb = {255, 0, 0};
-struct RGB_Code yellow_rgb = {255, 255, 0};
-struct RGB_Code green_rgb = {0, 255, 0};
-struct RGB_Code white_rgb = {255, 255, 255};
-struct RGB_Code no_rgb = {0, 0, 0};
 
 void setup() {
-  // Input logic
-  for(int index = 0; index < 6; index++){
-    pinMode(BUTTON_PINS[index], INPUT);
-  }
-  pinMode(RESET_PIN, INPUT);
-
-  // Output Logic
-  for(int index = 0; index < 5; index++){
-    pinMode(COLOR_PINS[index], OUTPUT);
-  }
-  for(int index = 0; index < 3; index++){
-    pinMode(CHANNELS[index], OUTPUT);
-    analogWrite(CHANNELS[index], LOW);
-  }
-  pinMode(PIEZO, OUTPUT);
-  
+  //debugging
   Serial.begin(115200);
   while(!Serial);
-  
-  // Setup IMU
-  if (!IMU.begin()){
-    Serial.println("Failed to initialize IMU!");
-    while(1);
-  }
-  Serial.print("Accelerometer sample rate = ");
-  Serial.print(IMU.accelerationSampleRate());
-  Serial.println(" Hz");
-  Serial.print("Gyroscope sample rate = ");
-  Serial.print(IMU.gyroscopeSampleRate());
-  Serial.println(" Hz"); 
-  Serial.println();
+  Nanobox.updateRGB(Nanobox.RGB_BLUE);
 }
 
-// TODO: MORE REACTIVE INTERFACE
 
 void loop() {
-  // debug
-  updateRGB(white_rgb);
-  delay(200);
-  updateRGB(no_rgb);
-  delay(200);
-  updateRGB(white_rgb);
-  delay(200);
-  updateRGB(no_rgb);
-  delay(200);  
-  updateRGB(white_rgb);
-  delay(200);
-  updateRGB(no_rgb);
-  delay(200);
+  // Select difficulty and wait for game-start
+  while(!playing){
+	if(Nanobox.reactiveButton(Nanobox.BUTTON5)){
+	  difficulty = (difficulty + 1) % 4;
+	  switch(difficulty){
+		case 0:
+		  Nanobox.updateRGB(Nanobox.RGB_BLUE);
+		  break;
+		case 1:
+		  Nanobox.updateRGB(Nanobox.RGB_GREEN);
+		  break;
+		case 2:
+		  Nanobox.updateRGB(Nanobox.RGB_YELLOW);
+		  break;
+		case 3:
+		  Nanobox.updateRGB(Nanobox.RGB_RED);
+		  break;
+		default:
+		  break;
+	  }
+	}
+  }
+  // TODO: Starting game
+}  
+  
+// old balance code for reference  
+  /*
   // Setup game variables
-    // Generate random starting point
-    // x_axis and y_axis values range from 0 to 256
+  // Generate random starting point
+  // x_axis and y_axis values range from 0 to 256
   long random_long = random();
   byte x_axis = lowByte(random_long);
   random_long = random_long >> 8; //shift out low Byte
@@ -188,7 +145,7 @@ void loop() {
       Serial.print('\t');
       Serial.print(accel[1]);
       Serial.print('\t');
-      Serial.println(accel[2]); */
+      Serial.println(accel[2]); *
       // Calculating moving averages
       total_x = total_x + accel[0] - accel_x[reading_index];
       total_y = total_y + accel[1] - accel_y[reading_index];
@@ -206,7 +163,7 @@ void loop() {
       Serial.print('\t');
       Serial.print(avg_y);
       Serial.print('\t');
-      Serial.println(avg_z);*/
+      Serial.println(avg_z);*
       
       x_distance = map(constrain(round(100*avg_x), low_threshold, high_threshold), low_threshold, high_threshold, 0, 256) - x_axis;
       y_distance = map(constrain(round(100*avg_y), low_threshold, high_threshold), low_threshold, high_threshold, 0, 256) - y_axis;
@@ -225,7 +182,7 @@ void loop() {
         Serial.print('\t');
         Serial.print(accel[1]);
         Serial.print('\t');
-        Serial.println(accel[2]);*/
+        Serial.println(accel[2]);*
         // Calculating moving averages
         total_x = total_x + accel[0] - accel_x[reading_index];
         total_y = total_y + accel[1] - accel_y[reading_index];
@@ -366,4 +323,4 @@ void updateRGB(RGB_Code rgb){
   analogWrite(RED_CHANNEL, map(rgb.r, 0, 255, 0, 1023));
   analogWrite(GREEN_CHANNEL, map(rgb.g, 0, 255, 0, 1023));
   analogWrite(BLUE_CHANNEL, map(rgb.b, 0, 255, 0, 1023));
-}
+} */

@@ -39,7 +39,8 @@ void NanoboxClass::blinkLED(int pin, int duration, int repeats){
 	}
 }
 // repeated blinking with non-equal on-/off-periods
-void NanoboxClass::blinkLED(int pin, int on_duration, int repeats, int off_duration){
+void NanoboxClass::blinkLED(int pin, int on_duration, 
+							int repeats, int off_duration){
 	while(repeats)
 	{
 		blinkLED(pin, on_duration);
@@ -47,7 +48,14 @@ void NanoboxClass::blinkLED(int pin, int on_duration, int repeats, int off_durat
 		repeats = repeats - 1; 
 	}
 }
-// Setup detection of rising or falling edge in button. Uses internal pull-ups and debouncing
+// control RGB-LED
+void NanoboxClass::updateRGB(RGB_Code rgb){
+	analogWrite(RED_CHANNEL, map(rgb.r, 0, 255, 0, max_brightness));
+	analogWrite(GREEN_CHANNEL, map(rgb.g, 0, 255, 0, max_brightness));
+	analogWrite(BLUE_CHANNEL, map(rgb.b, 0, 255, 0, max_brightness));
+}
+
+// Detection of rising or falling edge. Uses internal pull-ups and debouncing
 bool NanoboxClass::reactiveButton(int pin, bool rising){
 	// get index relating to button pin
 	const int* buttonPin;
@@ -69,7 +77,7 @@ bool NanoboxClass::reactiveButton(int pin, bool rising){
 		else if(time_pressed > debounceTimePress){
 			reactiveStates[index] = true;
 		}
-		//detect falling edge/button-release (due to Pull-up we have to invert the signal)
+		//detect falling edge/button-release
 		if(!rising && oldState && !reactiveStates[index]){
 			return true;
 		}
@@ -84,10 +92,11 @@ bool NanoboxClass::reactiveButton(int pin, bool rising){
 }
 
 /* return time of a button pressed (or not pressed), doubles as debouncing
- * This function must be added to the loop function of the main-sketch to be used as timer
- * It is implicitly used by Nanobox::reactiveButton
- * Returns positive values indicating the time the button has been pushed or negative values
- * indicating the time the button has not been pushed.
+ * This function must be added to the loop function of the main-sketch to be 
+ * used as timer
+ * Implicitly used by Nanobox::reactiveButton
+ * Returns positive values indicating the time the button has been pushed or 
+ * negative values indicating the time the button has not been pushed.
  */
 long NanoboxClass::switchTime(int pin){
 	const int* buttonPin;
