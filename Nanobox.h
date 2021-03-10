@@ -7,7 +7,9 @@
  #define NANOBOX_INCLUDED
  
  #include "Arduino.h"
- 
+ // Arduino-specific library simulating std::vector
+ #include <Vector.h>
+  
  class NanoboxClass {
 	 public:
 		// Constructor
@@ -41,11 +43,13 @@
 		const struct RGB_Code RGB_WHITE = {255, 255, 255};
 		const struct RGB_Code RGB_BLACK = {0, 0, 0};
 		
-		 // Overloaded blink functions
-		 void blinkLED(int pin, int duration);
-		 void blinkLED(int pin, int duration, int repeats);
-		 void blinkLED(int pin, int on_duration, 
-					   int repeats, int off_duration);
+		// Overloaded blink functions
+		//void blinkLED(int pin, int duration);
+		//void blinkLED(int pin, int duration, int repeats);
+		void blinkLED(int pin, int on_duration, 
+					   int repeats=1, int off_duration=0);
+		void blinkLED(Vector<int> pins, int vec_length, int on_duration, 
+					   int repeats=1, int off_duration=0);
 					   
 		// RGB-LED
 		void updateRGB(RGB_Code rgb);

@@ -19,14 +19,14 @@ bool playing = false;
 const int sequence_lengths[4] = {5, 7, 10, 15};  // length of sequences
 const int interval_lengths[4] = {1000, 750, 500, 250};  // milliseconds
 const int max_LEDs[4] = {1, 1, 2, 3};  // how many LEDs can trigger at once
-vector<vector<bool>> createEasySequence();
+vector<bool> nextLEDs(int max_leds);
+
+long random_nr = 0;
 
 
 void setup() {
-  //debugging
-  Serial.begin(115200);
-  while(!Serial);
   Nanobox.updateRGB(Nanobox.RGB_BLUE);
+  randomSeed(analogRead(A0));
 }
 
 
@@ -58,13 +58,15 @@ void loop() {
   }
   while(playing){
 	// Create sequences
-	// TODO: switch-case for easy, normal, hard, master
-	vector<vector<bool>> led_sequence = createEasySequence();
+	vector<vector<bool>> led_sequence{}; 
 
 	while(true){
 	  for(int i=0; i<sequence_lengths[difficulty]; i++){
+		led_sequence.push_back(nextLEDs(max_LEDs[difficulty]));
 		for(int j=0; j<4; j++){
-		  digitalWrite(Nanobox.COLOR_PINS[j], led_sequence[i][j]);
+		  if(led_sequence[i][j]){
+			Nanobox.blinkLED(Nanobox.COLOR_PINS[j], 250);
+		  }
 		}
 		delay(interval_lengths[difficulty]);
 	  }
@@ -72,40 +74,65 @@ void loop() {
 	//TODO: receive input and compare to led_sequence
   }
 }  
-// TODO: Extend to max-LEDs and sequence-length as function input
-vector<vector<bool>> createEasySequence(){
-  vector<vector<bool>> new_sequence;
-  
-  long random_nr = 0;
-  // We need 2 bits to determine 1 LED in each step of the sequence
-  for(int i=0; i < sequence_lengths[0]*2; i = i+2){
-	// generate new random number if new bits needed
-	if(i % 32 == 0){
-	  random_nr = random();
-	}
-	// Add a red LED to the sequence
-	if(bitRead(random_nr, i) && bitRead(random_nr, i+1)){
-	  vector<bool> new_vector{true, false, false, false};
-	  new_sequence.push_back(new_vector);
-	  //new_sequence[0][i/2] = true;
-	}
-	//Add a blue LED to the sequence
-	else if(bitRead(random_nr, i)){
-	  vector<bool> new_vector{false, true, false, false};
-	  new_sequence.push_back(new_vector);
-	  //new_sequence[1][i/2] = true;
-	}
-	//Add a yellow LED to the sequence
-	else if(bitRead(random_nr, i+1)){
-	  vector<bool> new_vector{false, false, true, false};
-	  new_sequence.push_back(new_vector);
-	  //new_sequence[2][i/2] = true; 
-	}
-	else{
-	  vector<bool> new_vector{false, false, false, true};
-	  new_sequence.push_back(new_vector);
-	  //new_sequence[3][i/2] = true;
-	}
+
+// TODO: On master-difficulty have 1, 2, or 3 LEDs instead of always 3
+vector<bool> nextLEDs(int max_leds){
+  vector<bool> new_vector; 
+
+  // Need 2 bits to determine which LEDs trigger in each step of the sequence
+  random_nr = random();
+  int return_leds = max_leds;
+  //determine number of LEDs to return
+  if(max_leds == 3){
+	return_leds = 1 + (random_nr % 3);
+	random_nr = random();
   }
-  return new_sequence;
+  
+  switch(random_nr % 4){
+	case 0:
+	  if(max_leds == 1){
+	    new_vector = {true, false, false, false};
+	  }
+	  else if(max_leds == 2){
+		new_vector = {true, false, true, false};
+	  }
+	  else{
+		new_vector = {false, true, true, true};
+	  }
+	  break;
+	case 1:
+	  if(max_leds == 1){
+	    new_vector = {false, true, false, false};
+	  }
+	  else if(max_leds == 2){
+		new_vector = {true, false, false, true};
+	  }
+	  else{
+		new_vector = {true, false, true, true};
+	  }
+	  break;
+	case 2:
+	  if(max_leds == 1){
+	    new_vector = {false, false, true, false};
+	  }
+	  else if(max_leds == 2){
+		new_vector = {false, true, true, false};
+	  }
+	  else{
+		new_vector = {true, true, false, true};
+	  }
+	  break;
+	case 3:
+	  if(max_leds == 1){
+		new_vector = {false, false, false, true};
+	  }
+	  else if(max_leds == 2){
+		new_vector = {false, true, false, true};
+	  }
+	  else{
+		new_vector = {true, true, true, false};
+	  }
+	  break;
+  }
+  return new_vector;
 }

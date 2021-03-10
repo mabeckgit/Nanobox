@@ -5,6 +5,9 @@
 #include "Nanobox.h"
 #include <algorithm>
 #include "Arduino.h"
+// Arduino-specific library simulating std::vector
+#include <Vector.h>
+
 
 //Default Constructor
 NanoboxClass::NanoboxClass(){
@@ -23,7 +26,7 @@ NanoboxClass::NanoboxClass(){
 	}
 }
 
-// blink LED on given pin for duration in miilliseconds
+/* blink LED on given pin for duration in miilliseconds
 void NanoboxClass::blinkLED(int pin, int duration){
 	digitalWrite(pin, HIGH); 
 	delay(duration); 
@@ -37,17 +40,57 @@ void NanoboxClass::blinkLED(int pin, int duration, int repeats){
 		delay(duration); 
 		repeats = repeats - 1; 
 	}
-}
+}*/
 // repeated blinking with non-equal on-/off-periods
-void NanoboxClass::blinkLED(int pin, int on_duration, 
+void NanoboxClass::blinkLED(int pin, int duration, 
 							int repeats, int off_duration){
-	while(repeats)
+	while(repeats > 1)
 	{
-		blinkLED(pin, on_duration);
-		delay(off_duration); 
+		digitalWrite(pin, HIGH);
+		delay(duration);
+		digitalWrite(pin, LOW);
+		if(off_duration != 0){
+		  delay(off_duration); 
+		}
+		else{
+		  delay(duration);
+		}
 		repeats = repeats - 1; 
 	}
+	digitalWrite(pin, HIGH);
+	delay(duration);
+	digitalWrite(pin, LOW);
 }
+// repeated blinking of several LEDs at once (must pass length of array...)
+void NanoboxClass::blinkLED(Vector<int> pins, int vec_length, int duration, 
+							int repeats, int off_duration){
+	while(repeats > 1)
+	{
+		for(int i=0; i < vec_length; i++){
+			digitalWrite(pins[i], HIGH);
+		}
+		delay(duration);
+		for(int i=0; i < vec_length; i++){
+			digitalWrite(pins[i], LOW);
+		}
+		if(off_duration != 0){
+			delay(off_duration);
+		}
+		else{
+			delay(duration);
+		}
+		repeats = repeats - 1;
+	}
+	for(int i=0; i < vec_length; i++){
+		digitalWrite(pins[i], HIGH);
+	}
+	delay(duration);
+	for(int i=0; i < vec_length; i++){
+		digitalWrite(pins[i], LOW);
+	}
+}
+			
+
 // control RGB-LED
 void NanoboxClass::updateRGB(RGB_Code rgb){
 	analogWrite(RED_CHANNEL, map(rgb.r, 0, 255, 0, max_brightness));
