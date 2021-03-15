@@ -10,6 +10,8 @@ Nanobox	KEYWORD1
 # Methods and Funtions (KEYWORD2)
 ###################################
 blinkLED	KEYWORD2
+updateRGB	KEYWORD2
+buttonPressed	KEYWORD2
 reactiveButton	KEYWORD2
 switchTime	KEYWORD2
 

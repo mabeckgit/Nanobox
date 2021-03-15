@@ -55,6 +55,7 @@
 		void updateRGB(RGB_Code rgb);
 		 
 		 // Button logic
+		 int buttonPressed(bool rising = true);
 		 bool reactiveButton(int pin, bool rising = true);
 		 long switchTime(int pin);
 		 

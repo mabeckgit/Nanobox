@@ -83,6 +83,19 @@ void NanoboxClass::updateRGB(RGB_Code rgb){
 	analogWrite(BLUE_CHANNEL, map(rgb.b, 0, 255, 0, max_brightness));
 }
 
+
+// Function that wraps reactiveButton into readout of any button
+int NanoboxClass::buttonPressed(bool rising){
+	int output = 0;
+	for(int i=0; i<(sizeof(BUTTON_PINS)/sizeof(BUTTON_PINS[0])); i++){
+		if(reactiveButton(BUTTON_PINS[i], rising)){
+			output = BUTTON_PINS[i];
+		}
+	}
+	return output;
+}
+
+
 // Detection of rising or falling edge. Uses internal pull-ups and debouncing
 bool NanoboxClass::reactiveButton(int pin, bool rising){
 	// get index relating to button pin
