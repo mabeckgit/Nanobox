@@ -4,7 +4,6 @@
  * button is pressed again. In contrast the YELLOW-LED will
  * be on only while the button is pressed
  */
-#include <Arduino_LSM6DS3.h>
 #include "Nanobox.h"
 
 bool flip = false;

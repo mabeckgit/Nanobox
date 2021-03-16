@@ -9,7 +9,9 @@
  #include "Arduino.h"
  // Arduino-specific library simulating std::vector
  #include <Vector.h>
-  
+ 
+//TODO: Move RGB_Code outside NanoboxClass
+ 
  class NanoboxClass {
 	 public:
 		// Constructor

@@ -8,13 +8,14 @@
 
 
 Vector<int> vector;
-int storage_array[4];
+int storage_array[3];  // defines the maximal number of elements in vector
 
 
 void setup(){
 	vector.setStorage(storage_array);
-	vector.push_back(Nanobox.RED);
+	vector.push_back(Nanobox.BLUE);
 	vector.push_back(Nanobox.GREEN);
+	vector.push_back(Nanobox.WHITE);
 }
  
 void loop() {

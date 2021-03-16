@@ -13,3 +13,5 @@ The project is under development on both fronts: Coding the first games and buil
 And here is the wiring diagram, if you want to hook up your own, **please note that Fritzing does not know the Nano 33 IoT**, yet, which is why I just use a Nano in the wiring diagram, the pinouts are mostly the same:
 
 ![Image of Wiring](wiring.png)
+
+TODO: Explain hardware-test and explain Zimon game.

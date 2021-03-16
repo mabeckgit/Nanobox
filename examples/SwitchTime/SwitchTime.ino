@@ -7,7 +7,6 @@
  * of time. Negative values are the time since the button had 
  * been released. 
  */
-#include <Arduino_LSM6DS3.h>
 #include "Nanobox.h"
 
 long st = 0;
