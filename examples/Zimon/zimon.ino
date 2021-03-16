@@ -17,17 +17,27 @@ bool playing = false;
 
 const int sequence_lengths[4] = {5, 7, 10, 15};  // length of sequences
 const int MAX_LENGTH = 15;
-const int interval_lengths[4] = {1000, 750, 500, 250};  // milliseconds
+const int interval_lengths[4] = {1500, 1200, 900, 600};  // milliseconds
 const int max_LEDs[4] = {1, 1, 2, 3};  // how many LEDs can trigger at once
 Vector<int> nextLEDs(int max_leds);
 Vector<int> getInputSequence(int length, int timeout);
 
 long random_nr = 0;
 
+// LEDs to signal game loss
+Vector<int> loseVector;
+int loseVector_storage[4];
+
 
 void setup() {
   Nanobox.updateRGB(Nanobox.RGB_BLUE);
   randomSeed(analogRead(A0));
+  
+  loseVector.setStorage(loseVector_storage);
+  for(int i=0; i<4; i++){
+	loseVector.push_back(Nanobox.COLOR_PINS[i]);
+  }
+  
   //debug
   Serial.begin(115200);
 }
@@ -102,14 +112,8 @@ void loop() {
 			}
 		  }
 	  }
-	  // end play immediately if a time out occured
-	  if(timed_out){
-		Serial.println("Ending game due to timeout"); 
-		playing = false; 
-		break;
-	  }
+	  
 	  // compare each input to the sequence break loop if wrong
-
 	  // check input sequence
 	  Serial.println("comparing sequences");
 	  bool matching = true;
@@ -139,12 +143,20 @@ void loop() {
 	  if(!matching){
 		Serial.println("You lost!"); 
 		playing = false;
+		// Indicate lost game by LEDs
+		Nanobox.blinkLED(loseVector, 100, 5);
 		break;
 	  }
 	  //input was correct
 	  Serial.println("Correct, moving on..."); 
+	  if(current_seq_length == sequence_lengths[difficulty]){
+		  //signal win
+		  for(int j=0; j<16; j++){
+			  Nanobox.blinkLED(Nanobox.COLOR_PINS[j%5], 200);
+		  }
+		  playing = false;
+	  }
 	}
-	//TODO: signal game end
   }
 }  
 
