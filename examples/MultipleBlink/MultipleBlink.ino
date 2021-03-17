@@ -19,7 +19,7 @@ void setup(){
 }
  
 void loop() {
-	Nanobox.blinkLED(vector, 250);
+	Nanobox.blinkLED(vector, 250, 3, 100);
 	delay(1000);
 }
 	 
