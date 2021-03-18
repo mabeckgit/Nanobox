@@ -31,5 +31,5 @@ This code uses `buttonPressed` as a convenient way to readout all button-signals
 
 ## Games
 Each game has its own readme.md that you can find in the respective folder.
-This is the list of games that this library has implemented so far:
-- Zimon: The classic memory game where you press buttons in a sequence presented. The sequence grows as you progress. I added a few extra-wrinkles into the game, though.
+This is the list of games that this library has implemented so far, click the names to get their detailed description and game-instructions:
+- [Zimon](https://github.com/mabeckgit/Nanobox/tree/main/examples/Games/Zimon): The classic memory game where you press buttons in a sequence presented. The sequence grows as you progress. I added a few extra-wrinkles into the game, though.
