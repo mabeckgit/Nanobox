@@ -106,10 +106,6 @@ void loop() {
 		  else{
 			Serial.println("pushing input vector"); 
 			input_sequence.push_back(new_input);
-			// reset LEDs
-			for(int j = 0; j<5; j++){
-			  digitalWrite(Nanobox.COLOR_PINS[j], LOW);
-			}
 		  }
 	  }
 	  
@@ -176,10 +172,10 @@ Vector<int> nextLEDs(int max_leds){
   
   switch(random_nr % 4){
 	case 0:
-	  if(max_leds == 1){
+	  if(return_leds == 1){
 	    new_vector.push_back(Nanobox.RED);
 	  }
-	  else if(max_leds == 2){
+	  else if(return_leds == 2){
 		new_vector.push_back(Nanobox.RED);
 		new_vector.push_back(Nanobox.YELLOW);
 	  }
@@ -190,10 +186,10 @@ Vector<int> nextLEDs(int max_leds){
 	  }
 	  break;
 	case 1:
-	  if(max_leds == 1){
+	  if(return_leds == 1){
 		new_vector.push_back(Nanobox.BLUE);
 	  }
-	  else if(max_leds == 2){
+	  else if(return_leds == 2){
 		new_vector.push_back(Nanobox.RED);
 		new_vector.push_back(Nanobox.GREEN);
 	  }
@@ -204,10 +200,10 @@ Vector<int> nextLEDs(int max_leds){
 	  }
 	  break;
 	case 2:
-	  if(max_leds == 1){
+	  if(return_leds == 1){
 		new_vector.push_back(Nanobox.YELLOW);
 	  }
-	  else if(max_leds == 2){
+	  else if(return_leds == 2){
 		new_vector.push_back(Nanobox.BLUE);
 		new_vector.push_back(Nanobox.YELLOW);
 	  }
@@ -218,10 +214,10 @@ Vector<int> nextLEDs(int max_leds){
 	  }
 	  break;
 	case 3:
-	  if(max_leds == 1){
+	  if(return_leds == 1){
 		new_vector.push_back(Nanobox.GREEN);
 	  }
-	  else if(max_leds == 2){
+	  else if(return_leds == 2){
 		new_vector.push_back(Nanobox.BLUE);
 		new_vector.push_back(Nanobox.GREEN);
 	  }
@@ -291,5 +287,11 @@ Vector<int> getInputSequence(int length, int timeout){
 	  Serial.print(" : ");
 	  Serial.println(readout[i]);
 	}
+	// reset LEDs
+	delay(250);
+	for(int j = 0; j<5; j++){
+	  digitalWrite(Nanobox.COLOR_PINS[j], LOW);
+	}
+	delay(250);
 	return readout;
 }

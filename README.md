@@ -28,3 +28,8 @@ Triggering multiple LEDs at once results in cluttering your code with for-loops 
 \*Unless you use port-manipulation. Which brings us to another point: `blinkLED` still uses a loop in the background, so it is not fully "at once". The purpose of this function is to keep your code compact not to manipulate ports synchronously. 
 ### RGB LED
 This code uses `buttonPressed` as a convenient way to readout all button-signals from Button1 to Button6. You can either detect rising edges (default) or falling edges. The first button pressed will make the function respond with the pin-number of that button. The second part in this example shows the `RGB_Code`struct. Those consist of three integers betwen 0-255 addressing the red-, green-, and blue-channel. This is exactly the same as [how images are encoded for color-displays](https://en.wikipedia.org/wiki/RGB_color_space). The Nanobox comes with RGB_Codes for White and Black, the 3 primary colors and the 3 secondary colors. The example shows how you can define your own colors. Use this example to check the correct hook-up of all your buttons and your common cathode multicolor LED.
+
+## Games
+Each game has its own readme.md that you can find in the respective folder.
+This is the list of games that this library has implemented so far:
+- Zimon: The classic memory game where you press buttons in a sequence presented. The sequence grows as you progress. I added a few extra-wrinkles into the game, though.
