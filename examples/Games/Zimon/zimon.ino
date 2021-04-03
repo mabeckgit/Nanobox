@@ -28,6 +28,14 @@ long random_nr = 0;
 Vector<int> loseVector;
 int loseVector_storage[4];
 
+// Button Settings. Change this to your comfort and your own Nanobox
+constexpr int red_button = NanoboxClass::BUTTON3;
+constexpr int blue_button = NanoboxClass::BUTTON5;
+constexpr int yellow_button = NanoboxClass::BUTTON6;
+constexpr int green_button = NanoboxClass::BUTTON4;
+constexpr int start_button = NanoboxClass::BUTTON2;
+constexpr int level_select_button = NanoboxClass::BUTTON1;
+
 
 void setup() {
   Nanobox.updateRGB(Nanobox.RGB_BLUE);
@@ -46,7 +54,7 @@ void setup() {
 void loop() {
   // Select difficulty and wait for game-start
   while(!playing){
-	if(Nanobox.reactiveButton(Nanobox.BUTTON5)){
+	if(Nanobox.reactiveButton(level_select_button)){
 	  difficulty = (difficulty + 1) % 4;
 	  switch(difficulty){
 		case 0:
@@ -65,7 +73,7 @@ void loop() {
 		  break;
 	  }
 	}
-	if(Nanobox.reactiveButton(Nanobox.BUTTON6)){
+	if(Nanobox.reactiveButton(start_button)){
 	  playing = true; 
 	}
   }
@@ -247,16 +255,16 @@ Vector<int> getInputSequence(int length, int timeout){
 		  if(button_read != 0){
 			//convert to LED-Pins
 			switch(button_read){
-			  case 7:
+			  case red_button:
 				led_read = Nanobox.RED;
 				break;
-			  case 8:
+			  case yellow_button:
 				led_read = Nanobox.YELLOW;
 				break;
-			  case 10:
+			  case blue_button:
 				led_read = Nanobox.BLUE;
 				break; 
-			  case 13:
+			  case green_button:
 				led_read = Nanobox.GREEN;
 				break;
 			  default:
@@ -264,7 +272,8 @@ Vector<int> getInputSequence(int length, int timeout){
 				break;
 			}
 			readout.push_back(led_read);
-			digitalWrite(led_read, HIGH); 
+			// TODO: Adjust brightness per LED
+			analogWrite(led_read, 50); 
 			start_time = millis();
 			break;
 		  }
@@ -290,7 +299,7 @@ Vector<int> getInputSequence(int length, int timeout){
 	// reset LEDs
 	delay(250);
 	for(int j = 0; j<5; j++){
-	  digitalWrite(Nanobox.COLOR_PINS[j], LOW);
+	  analogWrite(Nanobox.COLOR_PINS[j], LOW);
 	}
 	delay(250);
 	return readout;

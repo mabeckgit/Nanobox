@@ -4,7 +4,7 @@ Nanobox is a hobby project with the goal of developing a stand-alone system, bas
 
 The hardware consists of low-cost parts, specifically the Arduino at its core, 7 push-buttons, 5 colored LEDs, 1 common cathode multicolor LED, a potentiometer, a piezo-element, and a couple of resistors. That's it. The hardware will be housed in a plastic casing the size of a small gaming-controller for comfort and to fixate all its components. 
 
-The project is under development on both fronts: Coding the first games and building the hardware. Once I created a satisfactory casing, I will post images of the completed system, in the meantime you can look at this breadboard-version of it: 
+The project is under development on both fronts: Coding the first games and building the hardware. Here is a breadboard-version of it: 
 
 <p align="center">
 <img src="prototype.jpg" alt="prototype" width="350"/>
@@ -13,6 +13,10 @@ The project is under development on both fronts: Coding the first games and buil
 And here is the wiring diagram, if you want to hook up your own, **please note that Fritzing does not know the Nano 33 IoT**, yet, which is why I just use a Nano in the wiring diagram, the pinouts are mostly the same:
 
 ![Image of Wiring](wiring.png)
+
+This is the first prototype of a functional casing, the corresponding model-files can be found in the hardware folder:
+![CasingMk1](Mark1.jpg)
+
 
 ## Usage of the library
 The library consists of two parts: games and examples. The examples double as hardware-tests, meaning as you go through them you will not only see the new functions accessible through the NanoboxClass, but if you load them one by one to your board you can use them to test that you hardware and wiring operates correctly. After building your own Nanobox I recommend going through the examples one by one to first understand what functionality the Nanobox-class provides and then testing with it the hardware of your box.
@@ -33,3 +37,6 @@ This code uses `buttonPressed` as a convenient way to readout all button-signals
 Each game has its own readme.md that you can find in the respective folder.
 This is the list of games that this library has implemented so far, click the names to get their detailed description and game-instructions:
 - [Zimon](https://github.com/mabeckgit/Nanobox/tree/main/examples/Games/Zimon): The classic memory game where you press buttons in a sequence presented. The sequence grows as you progress. I added a few extra-wrinkles into the game, though.
+
+## Formal documentation
+TBD

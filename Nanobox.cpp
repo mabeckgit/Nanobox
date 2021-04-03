@@ -29,11 +29,15 @@ NanoboxClass::NanoboxClass(){
 // repeated blinking with non-equal on-/off-periods
 void NanoboxClass::blinkLED(int pin, int duration, 
 							int repeats, int off_duration){
+	const int* ledPin;
+	ledPin = std::find(COLOR_PINS, COLOR_PINS+5, pin);
+	int index = std::distance(COLOR_PINS, ledPin);
 	while(repeats > 1)
 	{
-		digitalWrite(pin, HIGH);
+		analogWrite(pin, LED_BRIGHTNESSES[index]);
+		
 		delay(duration);
-		digitalWrite(pin, LOW);
+		analogWrite(pin, LOW);
 		if(off_duration != 0){
 		  delay(off_duration); 
 		}
@@ -42,21 +46,28 @@ void NanoboxClass::blinkLED(int pin, int duration,
 		}
 		repeats = repeats - 1; 
 	}
-	digitalWrite(pin, HIGH);
+	// Last cycle has no delay in off-duration to not block execution 
+	analogWrite(pin, LED_BRIGHTNESSES[index]);
 	delay(duration);
-	digitalWrite(pin, LOW);
+	analogWrite(pin, LOW);
 }
 // repeated blinking of several LEDs at once
 void NanoboxClass::blinkLED(Vector<int> pins, int duration, 
 							int repeats, int off_duration){
+	
 	while(repeats > 1)
 	{
 		for(int i=0; i < pins.size(); i++){
-			digitalWrite(pins[i], HIGH);
+			// get brightness
+			const int* ledPin;
+			ledPin = std::find(COLOR_PINS, COLOR_PINS+5, pins[i]);
+			int index = std::distance(COLOR_PINS, ledPin);
+
+			analogWrite(pins[i], LED_BRIGHTNESSES[index]);
 		}
 		delay(duration);
 		for(int i=0; i < pins.size(); i++){
-			digitalWrite(pins[i], LOW);
+			analogWrite(pins[i], LOW);
 		}
 		if(off_duration != 0){
 			delay(off_duration);
@@ -66,12 +77,18 @@ void NanoboxClass::blinkLED(Vector<int> pins, int duration,
 		}
 		repeats = repeats - 1;
 	}
+	
+	// Last cycle has no delay in off-duration to not block execution 
 	for(int i=0; i < pins.size(); i++){
-		digitalWrite(pins[i], HIGH);
+		const int* ledPin;
+		ledPin = std::find(COLOR_PINS, COLOR_PINS+5, pins[i]);
+		int index = std::distance(COLOR_PINS, ledPin);
+
+		analogWrite(pins[i], LED_BRIGHTNESSES[index]);
 	}
 	delay(duration);
 	for(int i=0; i < pins.size(); i++){
-		digitalWrite(pins[i], LOW);
+		analogWrite(pins[i], LOW);
 	}
 }
 			

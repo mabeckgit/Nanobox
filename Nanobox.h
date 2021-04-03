@@ -23,9 +23,9 @@
 		const int RED = 2; 
 		const int BLUE = 3;
 		const int YELLOW = 6;
-		const int GREEN = 9;
-		const int WHITE = 5;
-		const int COLOR_PINS[5] = {2, 3, 6, 9, 5};
+		const int GREEN = 5;
+		const int WHITE = 9;
+		const int COLOR_PINS[5] = {2, 3, 6, 5, 9};
 		// common-cathode LED channels
 		const int RED_CHANNEL = A5;
 		const int GREEN_CHANNEL = A3;
@@ -65,12 +65,12 @@
 		  * Input Logic
 		  */
 		 // constants mapping buttons to pins
-		const int BUTTON1 = 7;
-		const int BUTTON2 = 8;
-		const int BUTTON3 = 10;
-		const int BUTTON4 = 13;
-		const int BUTTON5 = 11;
-		const int BUTTON6 = 12;
+		static const int BUTTON1 = 7;
+		static const int BUTTON2 = 8;
+		static const int BUTTON3 = 10;
+		static const int BUTTON4 = 13;
+		static const int BUTTON5 = 11;
+		static const int BUTTON6 = 12;
 		const int BUTTON_PINS[6] = {7, 8, 10, 13, 11, 12};
 		const int RESET_PIN = A1;
 
@@ -88,6 +88,14 @@
 		
 		//for controlling overall brightness of common cathode LED
 		int max_brightness = 255;
+		
+		//for adjusting brightness of LEDs
+		const int RED_BRIGHT = 255; 
+		const int BLUE_BRIGHT = 5;
+		const int YELLOW_BRIGHT = 255;
+		const int GREEN_BRIGHT = 255;
+		const int WHITE_BRIGHT = 255; 
+		const int LED_BRIGHTNESSES[5] = {255, 5, 255, 255, 255};
 };
 
 extern NanoboxClass Nanobox;	// The Nanobox object
